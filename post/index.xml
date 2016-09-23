@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on dpc.pw blog</title>
+    <link>http://dpc.pw/post/</link>
+    <description>Recent content in Posts on dpc.pw blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 15 Sep 2016 21:38:16 -0700</lastBuildDate>
+    <atom:link href="http://dpc.pw/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Precache all the things!</title>
+      <link>http://dpc.pw/precache-all-the-things/</link>
+      <pubDate>Thu, 15 Sep 2016 21:38:16 -0700</pubDate>
+      
+      <guid>http://dpc.pw/precache-all-the-things/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://cdn.memegenerator.net/instances/400x/33671988.jpg&#34; alt=&#34;funny meme&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Having a lot of RAM nowadays is relatively cheap and Linux can make a good use
+of it. With tools like &lt;a href=&#34;http://en.wikipedia.org/wiki/Preload_(software)&#34;&gt;preload&lt;/a&gt; most of Linux distributions are
+trying to proactively read things that you might want to use soon.&lt;/p&gt;
+
+&lt;p&gt;However if your desktop have a ridiculous amount of memory (mine has 32GB) it
+may take ages for these tools to make use of all that memory. And why would you pay
+for it and then let it just sit idle instead of working for you?&lt;/p&gt;
+
+&lt;p&gt;The thing is: you can do much better, because you know what you are going to
+use in the future.&lt;/p&gt;
+
+&lt;p&gt;So, as always, let&amp;rsquo;s write a tiny script under the name &lt;code&gt;precache&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/sh
+
+exec nice -n 20 ionice -c 3 find &amp;quot;${1:-.}&amp;quot; -xdev -type f \
+	-exec nice -n 20 ionice -c 3 cat &#39;{}&#39; \; &amp;gt; /dev/null
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Personally I keep it as &lt;code&gt;$HOME/bin/precache&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The basic idea is to traverse through all the subdirectories of an argument
+using &lt;code&gt;find&lt;/code&gt; and read all the files from the disk, discarding their output. If no
+argument is given &lt;code&gt;precache&lt;/code&gt; will traverse the current directory.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;nice&lt;/code&gt; and &lt;code&gt;ionice&lt;/code&gt; commands are used to force all of this to be done only
+when the system is really idle, so it&amp;rsquo;s not slowing down anything else.&lt;/p&gt;
+
+&lt;p&gt;Keep in mind that the script will not switch to different filesystems (&lt;code&gt;-xdev&lt;/code&gt;
+option).&lt;/p&gt;
+
+&lt;p&gt;All of this is done to make Linux fill the free memory with cached
+data so it&amp;rsquo;s already waiting for you when you need it. You can check the
+memory usage using &lt;code&gt;top&lt;/code&gt; command. The &lt;code&gt;cached&lt;/code&gt; position is the one that we want
+to increase to the point where no memory is sitting idle.&lt;/p&gt;
+
+&lt;p&gt;How do I use this script? There are multiple ways.&lt;/p&gt;
+
+&lt;p&gt;First, you can preload your whole home directory on boot.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/sh
+
+if [ ! -f &amp;quot;/tmp/$USER-home-precache&amp;quot; ]; then
+	touch -f &amp;quot;/tmp/$USER-home-precache&amp;quot;
+	precache &amp;quot;$HOME&amp;quot; &amp;amp;
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://en.gentoo-wiki.com/wiki/Autostart_Programs&#34;&gt;Add this command to your autostart on login.&lt;/a&gt; or alternatively
+just put:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;precache /home/&amp;lt;yourusername&amp;gt; &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;in your system&amp;rsquo;s &lt;code&gt;/etc/rc.local&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also, when you&amp;rsquo;re about to work on something in few minutes (like launching a
+game or starting a big compilation), you can precache relevant directories to
+make the game load and work faster.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Make current dir a tmux session placeholder.</title>
+      <link>http://dpc.pw/make-current-dir-a-tmux-session-placeholder./</link>
+      <pubDate>Thu, 15 Sep 2016 21:38:06 -0700</pubDate>
+      
+      <guid>http://dpc.pw/make-current-dir-a-tmux-session-placeholder./</guid>
+      <description>&lt;p&gt;&lt;code&gt;tmux-session.sh&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
+# Reattach to (or spawn new if not existing) tmux session
+# tmux session &amp;lt;session_name&amp;gt; [ &amp;lt;session_directory&amp;gt; ]
+
+export STY=&amp;quot;tmux-$1&amp;quot;
+RC=&amp;quot;.tmux&amp;quot;
+if [ ! -z &amp;quot;$2&amp;quot; ]; then
+	RC=&amp;quot;$2/$RC&amp;quot;
+fi
+
+RC=&amp;quot;$(readlink -f &amp;quot;$RC&amp;quot;)&amp;quot;
+
+if ! tmux has-session -t &amp;quot;$1&amp;quot; 2&amp;gt;/dev/null ; then
+	if [ ! -z &amp;quot;$RC&amp;quot; -a -f &amp;quot;$RC&amp;quot; ] ; then
+		tmux new-session -d -s &amp;quot;$1&amp;quot; &amp;quot;tmux move-window -t 9; exec tmux source-file \&amp;quot;$RC\&amp;quot;&amp;quot;
+	else
+		tmux new-session -d -s &amp;quot;$1&amp;quot;
+	fi
+fi
+
+exec tmux attach-session -t &amp;quot;$1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;tmux-here.sh&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
+# Spawn tmux session in current directory
+# use path&#39;s sha256 hash as session name
+
+exec &amp;quot;$HOME/bin/tmux-session&amp;quot; &amp;quot;$(echo &amp;quot;$PWD&amp;quot; | sha256sum | awk &#39;{ print $1 }&#39;)&amp;quot; &amp;quot;$PWD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shell tip: `retry.sh`</title>
+      <link>http://dpc.pw/shell-tip-retry.sh/</link>
+      <pubDate>Thu, 15 Sep 2016 21:37:51 -0700</pubDate>
+      
+      <guid>http://dpc.pw/shell-tip-retry.sh/</guid>
+      <description>&lt;p&gt;It&amp;rsquo;s often the case when I have a command you want to retry until it&amp;rsquo;s successful.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s useful to have &lt;code&gt;retry.sh&lt;/code&gt; script like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/sh
+
+while ! &amp;quot;$@&amp;quot;; do sleep 1; done
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Prepend or append to PATH like environment variable.</title>
+      <link>http://dpc.pw/prepend-or-append-to-path-like-environment-variable./</link>
+      <pubDate>Fri, 15 Jan 2016 21:37:51 -0700</pubDate>
+      
+      <guid>http://dpc.pw/prepend-or-append-to-path-like-environment-variable./</guid>
+      <description>&lt;p&gt;In Unix there are quite a lot variables representing path lists of different kind similar to &lt;code&gt;PATH&lt;/code&gt; like &lt;code&gt;LD_LIBRARY_PATH&lt;/code&gt;, &lt;code&gt;PKG_CONFIG_PATH&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Usual idiom to modify these variables is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$PATH=&amp;quot;$PATH:/new/path/to/something&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I found it quite a lot of typing in a daily work, so I&amp;rsquo;m using functions shortening the above to just:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;append_env PATH /new/path/to/something
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The version for Bash is:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function append_env {
+    if [ -z &amp;quot;${!1}&amp;quot; ]; then
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2&amp;quot;
+    else
+        export &amp;quot;$1&amp;quot;=&amp;quot;${!1}:$2&amp;quot;
+    fi
+}
+function prepend_env {
+    if [ -z &amp;quot;${!1}&amp;quot; ]; then
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2&amp;quot;
+    else
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2:${!1}&amp;quot;
+    fi
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And for Zsh:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function append_env {
+    eval &amp;quot;local v=\$$1&amp;quot;
+    if [ -z &amp;quot;$v&amp;quot; ]; then
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2&amp;quot;
+    else
+        export &amp;quot;$1&amp;quot;=&amp;quot;$v:$2&amp;quot;
+    fi
+}
+function prepend_env {
+    eval &amp;quot;local v=\$$1&amp;quot;
+    if [ -z &amp;quot;$v&amp;quot; ]; then
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2&amp;quot;
+    else
+        export &amp;quot;$1&amp;quot;=&amp;quot;$2:$v&amp;quot;
+    fi
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Asynchronous GNU Readline printing</title>
+      <link>http://dpc.pw/asynchronous-gnu-readline-printing/</link>
+      <pubDate>Mon, 15 Sep 2014 21:38:16 -0700</pubDate>
+      
+      <guid>http://dpc.pw/asynchronous-gnu-readline-printing/</guid>
+      <description>&lt;p&gt;Some while ago I&amp;rsquo;ve spend my time developing a &lt;a href=&#34;http://github.com/dpc/xmppconsole&#34;&gt;XMPP command line client&lt;/a&gt; which is using &lt;a href=&#34;http://code.stanziq.com/strophe/&#34;&gt;strophe XMPP library&lt;/a&gt;
+to handle XMPP and &lt;a href=&#34;http://tiswww.case.edu/php/chet/readline/rltop.html&#34;&gt;GNU Readline&lt;/a&gt; for I/O.&lt;/p&gt;
+
+&lt;p&gt;The idea was to have a readline prompt at the bottom and yet be able to asynchronously print incoming messages above it - in the &amp;ldquo;log window&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;It seems that many people were looking for solution already:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/1512028/gnu-readline-how-do-clear-the-input-line&#34;&gt;GNU Readline: how do clear the input line?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/691652/using-gnu-readline-how-can-i-add-ncurses-in-the-same-program&#34;&gt;Using GNU Readline; how can I add ncurses in the same program?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I haven&amp;rsquo;t found any satisfying answer on the web so I&amp;rsquo;d like to present my own solution.&lt;/p&gt;
+
+&lt;p&gt;Basic idea is to use alternate (asynchronous) GNU Readline interface and on each new asynchronous print:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;save a copy of current line state&lt;/li&gt;
+&lt;li&gt;clear both prompt and current line (content + position)&lt;/li&gt;
+&lt;li&gt;force screen update&lt;/li&gt;
+&lt;li&gt;print asynchronous event (followed by a newline)&lt;/li&gt;
+&lt;li&gt;restore prompt and current line state&lt;/li&gt;
+&lt;li&gt;force screen update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Simple it is, indeed and you can see &lt;a href=&#34;http://github.com/dpc/xmppconsole/blob/master/src/io.c&#34;&gt;a working code&lt;/a&gt; if you don&amp;rsquo;t believe.&lt;/p&gt;
+
+&lt;p&gt;The only thing that I was unable to get is preventing putting the original confirmed readline buffer in &amp;ldquo;log window&amp;rdquo;. As this is not a big deal for my requirements the complete and universal solution would be able to change what the user typed in the readline buffer just before it&amp;rsquo;s getting scrolled up and becoming part of the &amp;ldquo;log window&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;I hope someone will fine it useful, like I do.&lt;/p&gt;
+
+&lt;p&gt;Update:&lt;/p&gt;
+
+&lt;p&gt;Below is a patch by Denis Linvinus:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://pastebin.com/SA87Lxqq&#34;&gt;http://pastebin.com/SA87Lxqq&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;that he uses to get more &amp;ldquo;unrestricted log window with a prompt&amp;rdquo; for his project and wanted me to share with you too. Generally, I think it&amp;rsquo;s a bit unclean because of using vt100 escape sequences so I&amp;rsquo;m not going to merge it, but if anyone finds it useful, it&amp;rsquo;s good for everyone.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

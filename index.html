@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dpc.pw blog &middot; dpc.pw blog</title>
+
+  <meta name="description" content="">
+
+  <meta name="generator" content="Hugo 0.16" />
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="dpc.pw blog &middot; dpc.pw blog">
+  <meta name="twitter:description" content="">
+
+  <meta property="og:title" content="dpc.pw blog &middot; dpc.pw blog">
+  <meta property="og:type" content="blog">
+  <meta property="og:description" content="">
+  
+
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Oxygen:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="http://dpc.pw//css/all.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="alternate" type="application/rss+xml" title="dpc.pw blog" href="http://dpc.pw//index.xml" />
+</head>
+<body>
+
+
+<div id="layout" class="pure-g">
+  <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    <hgroup>
+      <h1 class="brand-title"><a href="http://dpc.pw/">dpc.pw blog</a></h1>
+      
+    </hgroup>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        
+        
+        <li class="nav-item">
+          <a class="pure-button" href="http://dpc.pw//index.xml"><i class="fa fa-rss"></i> rss</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+
+</div>
+
+
+  <div class="content pure-u-1 pure-u-md-3-4">
+    <div>
+      
+      <div class="posts">
+        
+          <h1 class="content-subhead">
+  2016-09-15
+  <p class="post-meta">
+    
+    
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+              <a href="http://dpc.pw/precache-all-the-things/" class="post-title">Precache all the things!</a>
+            </header>
+
+            <div class="post-description">
+              <p><img src="http://cdn.memegenerator.net/instances/400x/33671988.jpg" alt="funny meme" /></p>
+
+<p>Having a lot of RAM nowadays is relatively cheap and Linux can make a good use
+of it. With tools like <a href="http://en.wikipedia.org/wiki/Preload_(software)">preload</a> most of Linux distributions are
+trying to proactively read things that you might want to use soon.</p>
+
+<p>However if your desktop have a ridiculous amount of memory (mine has 32GB) it
+may take ages for these tools to make use of all that memory. And why would you pay
+for it and then let it just sit idle instead of working for you?</p>
+
+<p>The thing is: you can do much better, because you know what you are going to
+use in the future.</p>
+
+<p>So, as always, let&rsquo;s write a tiny script under the name <code>precache</code>.</p>
+
+<pre><code class="language-bash">#!/bin/sh
+
+exec nice -n 20 ionice -c 3 find &quot;${1:-.}&quot; -xdev -type f \
+	-exec nice -n 20 ionice -c 3 cat '{}' \; &gt; /dev/null
+</code></pre>
+
+<p>Personally I keep it as <code>$HOME/bin/precache</code>.</p>
+
+<p>The basic idea is to traverse through all the subdirectories of an argument
+using <code>find</code> and read all the files from the disk, discarding their output. If no
+argument is given <code>precache</code> will traverse the current directory.</p>
+
+<p>The <code>nice</code> and <code>ionice</code> commands are used to force all of this to be done only
+when the system is really idle, so it&rsquo;s not slowing down anything else.</p>
+
+<p>Keep in mind that the script will not switch to different filesystems (<code>-xdev</code>
+option).</p>
+
+<p>All of this is done to make Linux fill the free memory with cached
+data so it&rsquo;s already waiting for you when you need it. You can check the
+memory usage using <code>top</code> command. The <code>cached</code> position is the one that we want
+to increase to the point where no memory is sitting idle.</p>
+
+<p>How do I use this script? There are multiple ways.</p>
+
+<p>First, you can preload your whole home directory on boot.</p>
+
+<pre><code class="language-bash">#!/bin/sh
+
+if [ ! -f &quot;/tmp/$USER-home-precache&quot; ]; then
+	touch -f &quot;/tmp/$USER-home-precache&quot;
+	precache &quot;$HOME&quot; &amp;
+fi
+</code></pre>
+
+<p><a href="http://en.gentoo-wiki.com/wiki/Autostart_Programs">Add this command to your autostart on login.</a> or alternatively
+just put:</p>
+
+<pre><code>precache /home/&lt;yourusername&gt; &amp;
+</code></pre>
+
+<p>in your system&rsquo;s <code>/etc/rc.local</code>.</p>
+
+<p>Also, when you&rsquo;re about to work on something in few minutes (like launching a
+game or starting a big compilation), you can precache relevant directories to
+make the game load and work faster.</p>
+
+            </div>
+          </section>
+        
+          <h1 class="content-subhead">
+  2016-09-15
+  <p class="post-meta">
+    
+    
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+              <a href="http://dpc.pw/make-current-dir-a-tmux-session-placeholder./" class="post-title">Make current dir a tmux session placeholder.</a>
+            </header>
+
+            <div class="post-description">
+              <p><code>tmux-session.sh</code>:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+# Reattach to (or spawn new if not existing) tmux session
+# tmux session &lt;session_name&gt; [ &lt;session_directory&gt; ]
+
+export STY=&quot;tmux-$1&quot;
+RC=&quot;.tmux&quot;
+if [ ! -z &quot;$2&quot; ]; then
+	RC=&quot;$2/$RC&quot;
+fi
+
+RC=&quot;$(readlink -f &quot;$RC&quot;)&quot;
+
+if ! tmux has-session -t &quot;$1&quot; 2&gt;/dev/null ; then
+	if [ ! -z &quot;$RC&quot; -a -f &quot;$RC&quot; ] ; then
+		tmux new-session -d -s &quot;$1&quot; &quot;tmux move-window -t 9; exec tmux source-file \&quot;$RC\&quot;&quot;
+	else
+		tmux new-session -d -s &quot;$1&quot;
+	fi
+fi
+
+exec tmux attach-session -t &quot;$1&quot;
+</code></pre>
+
+<p><code>tmux-here.sh</code>:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+# Spawn tmux session in current directory
+# use path's sha256 hash as session name
+
+exec &quot;$HOME/bin/tmux-session&quot; &quot;$(echo &quot;$PWD&quot; | sha256sum | awk '{ print $1 }')&quot; &quot;$PWD&quot;
+</code></pre>
+
+            </div>
+          </section>
+        
+          <h1 class="content-subhead">
+  2016-09-15
+  <p class="post-meta">
+    
+    
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+              <a href="http://dpc.pw/shell-tip-retry.sh/" class="post-title">Shell tip: `retry.sh`</a>
+            </header>
+
+            <div class="post-description">
+              <p>It&rsquo;s often the case when I have a command you want to retry until it&rsquo;s successful.</p>
+
+<p>It&rsquo;s useful to have <code>retry.sh</code> script like this:</p>
+
+<pre><code class="language-bash">#!/bin/sh
+
+while ! &quot;$@&quot;; do sleep 1; done
+</code></pre>
+
+            </div>
+          </section>
+        
+          <h1 class="content-subhead">
+  2016-01-15
+  <p class="post-meta">
+    
+    
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+              <a href="http://dpc.pw/prepend-or-append-to-path-like-environment-variable./" class="post-title">Prepend or append to PATH like environment variable.</a>
+            </header>
+
+            <div class="post-description">
+              <p>In Unix there are quite a lot variables representing path lists of different kind similar to <code>PATH</code> like <code>LD_LIBRARY_PATH</code>, <code>PKG_CONFIG_PATH</code>.</p>
+
+<p>Usual idiom to modify these variables is:</p>
+
+<pre><code>$PATH=&quot;$PATH:/new/path/to/something&quot;
+</code></pre>
+
+<p>I found it quite a lot of typing in a daily work, so I&rsquo;m using functions shortening the above to just:</p>
+
+<pre><code>append_env PATH /new/path/to/something
+</code></pre>
+
+<p>The version for Bash is:</p>
+
+<pre><code>function append_env {
+    if [ -z &quot;${!1}&quot; ]; then
+        export &quot;$1&quot;=&quot;$2&quot;
+    else
+        export &quot;$1&quot;=&quot;${!1}:$2&quot;
+    fi
+}
+function prepend_env {
+    if [ -z &quot;${!1}&quot; ]; then
+        export &quot;$1&quot;=&quot;$2&quot;
+    else
+        export &quot;$1&quot;=&quot;$2:${!1}&quot;
+    fi
+}
+</code></pre>
+
+<p>And for Zsh:</p>
+
+<pre><code>function append_env {
+    eval &quot;local v=\$$1&quot;
+    if [ -z &quot;$v&quot; ]; then
+        export &quot;$1&quot;=&quot;$2&quot;
+    else
+        export &quot;$1&quot;=&quot;$v:$2&quot;
+    fi
+}
+function prepend_env {
+    eval &quot;local v=\$$1&quot;
+    if [ -z &quot;$v&quot; ]; then
+        export &quot;$1&quot;=&quot;$2&quot;
+    else
+        export &quot;$1&quot;=&quot;$2:$v&quot;
+    fi
+}
+</code></pre>
+
+            </div>
+          </section>
+        
+          <h1 class="content-subhead">
+  2014-09-15
+  <p class="post-meta">
+    
+    
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+              <a href="http://dpc.pw/asynchronous-gnu-readline-printing/" class="post-title">Asynchronous GNU Readline printing</a>
+            </header>
+
+            <div class="post-description">
+              <p>Some while ago I&rsquo;ve spend my time developing a <a href="http://github.com/dpc/xmppconsole">XMPP command line client</a> which is using <a href="http://code.stanziq.com/strophe/">strophe XMPP library</a>
+to handle XMPP and <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">GNU Readline</a> for I/O.</p>
+
+<p>The idea was to have a readline prompt at the bottom and yet be able to asynchronously print incoming messages above it - in the &ldquo;log window&rdquo;.</p>
+
+<p>It seems that many people were looking for solution already:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1512028/gnu-readline-how-do-clear-the-input-line">GNU Readline: how do clear the input line?</a></li>
+<li><a href="http://stackoverflow.com/questions/691652/using-gnu-readline-how-can-i-add-ncurses-in-the-same-program">Using GNU Readline; how can I add ncurses in the same program?</a></li>
+</ul>
+
+<p>I haven&rsquo;t found any satisfying answer on the web so I&rsquo;d like to present my own solution.</p>
+
+<p>Basic idea is to use alternate (asynchronous) GNU Readline interface and on each new asynchronous print:</p>
+
+<ul>
+<li>save a copy of current line state</li>
+<li>clear both prompt and current line (content + position)</li>
+<li>force screen update</li>
+<li>print asynchronous event (followed by a newline)</li>
+<li>restore prompt and current line state</li>
+<li>force screen update</li>
+</ul>
+
+<p>Simple it is, indeed and you can see <a href="http://github.com/dpc/xmppconsole/blob/master/src/io.c">a working code</a> if you don&rsquo;t believe.</p>
+
+<p>The only thing that I was unable to get is preventing putting the original confirmed readline buffer in &ldquo;log window&rdquo;. As this is not a big deal for my requirements the complete and universal solution would be able to change what the user typed in the readline buffer just before it&rsquo;s getting scrolled up and becoming part of the &ldquo;log window&rdquo;.</p>
+
+<p>I hope someone will fine it useful, like I do.</p>
+
+<p>Update:</p>
+
+<p>Below is a patch by Denis Linvinus:</p>
+
+<p><a href="http://pastebin.com/SA87Lxqq">http://pastebin.com/SA87Lxqq</a></p>
+
+<p>that he uses to get more &ldquo;unrestricted log window with a prompt&rdquo; for his project and wanted me to share with you too. Generally, I think it&rsquo;s a bit unclean because of using vt100 escape sequences so I&rsquo;m not going to merge it, but if anyone finds it useful, it&rsquo;s good for everyone.</p>
+
+            </div>
+          </section>
+        
+      </div>
+      
+
+      <div class="footer">
+  <div class="pure-menu pure-menu-horizontal pure-menu-open">
+    <ul>
+      <li>Powered by <a class="hugo" href="http://hugo.spf13.com/" target="_blank">hugo</a></li>
+    </ul>
+  </div>
+</div>
+<script src="http://dpc.pw//js/all.min.js"></script>
+
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>
