@@ -1,0 +1,11 @@
+baseurl = "http://dpc.pw/"
+languageCode = "en-us"
+title = "dpc.pw blog"
+theme = "hugo-theme-puremose"
+footnotereturnlinkcontents= "↩"
+paginate = 10
+disqusShortname = "dpc.pw"
+
+[permalinks]
+  post = "/:title/"
+
