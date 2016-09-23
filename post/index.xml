@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>dpc.pw blog</title>
-    <link>http://dpc.pw/</link>
-    <description>Recent content on dpc.pw blog</description>
+    <title>Posts on dpc.pw blog</title>
+    <link>http://dpc.pw/post/</link>
+    <description>Recent content in Posts on dpc.pw blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 15 Sep 2016 21:38:16 -0700</lastBuildDate>
-    <atom:link href="http://dpc.pw/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://dpc.pw/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Precache all the things!</title>
