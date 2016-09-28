@@ -25,14 +25,14 @@ decently sized ecosystem. Everybody know about it, and have somewhat positive
 attitude thinking &amp;ldquo;it&amp;rsquo;s simple, fast, and easy to learn&amp;rdquo;.&lt;/p&gt;
 
 &lt;p&gt;I enjoy (Crude but still) static typing, compiling to native
-code, and most of all: native-green thread support make Go quite productive for
-server side code. You just have to get used to many workarounds for lack of
-generics, remember about avoid all the &lt;a href=&#34;https://gist.github.com/lavalamp/4bd23295a9f32706a48f&#34;&gt;Go landmines&lt;/a&gt; and don&amp;rsquo;t mind poor
-expressiveness.&lt;/p&gt;
+code, and most of all: native-green thread, making Go quite productive for
+server side code. I just had to get used to many workarounds for lack of
+generics, remember about avoid all the &lt;a href=&#34;https://gist.github.com/lavalamp/4bd23295a9f32706a48f&#34;&gt;Go landmines&lt;/a&gt; and ignore
+poor expressiveness.&lt;/p&gt;
 
 &lt;p&gt;My favourite thing about Go, is that it produces static, native binaries.
-Unlike software written in Python, using software writing in Go is always
-painless.&lt;/p&gt;
+Unlike software written in Python, getting software written in Go to actually
+run is always painless.&lt;/p&gt;
 
 &lt;p&gt;However overall, Go is poorly designed language full of painful archaisms. It
 ignores multiple great ideas from programming languages research and other PL
@@ -41,7 +41,7 @@ experiences.&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://news.ycombinator.com/item?id=12525949&#34;&gt;&amp;ldquo;Go&amp;rsquo;s simplicity is syntactic. The complexity is in semantics and runtime
 behavior.&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Every time I write code in Go, I feel deeply disappointed.&lt;/p&gt;
+&lt;p&gt;Every time I write code in Go, I get the job done, but I feel deeply disappointed.&lt;/p&gt;
 
 &lt;h2 id=&#34;reading-material&#34;&gt;Reading material&lt;/h2&gt;
 
