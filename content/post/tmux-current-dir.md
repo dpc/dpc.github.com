@@ -2,6 +2,7 @@
 date = "2016-09-15T21:38:06-07:00"
 draft = false
 title = "Make current dir a tmux session placeholder."
+tags = ["shell", "tmux"]
 
 +++
 

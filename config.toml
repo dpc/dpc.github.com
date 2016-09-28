@@ -1,11 +1,13 @@
 baseurl = "http://dpc.pw/"
 languageCode = "en-us"
-title = "dpc.pw blog"
+title = "dpc's blog"
 theme = "hugo-theme-puremose"
 footnotereturnlinkcontents= "↩"
 paginate = 10
-disqusShortname = "dpc.pw"
+disqusShortname = "dpc-blog"
 
 [permalinks]
   post = "/:title/"
 
+[params]
+  description = "Random posts about stuff."

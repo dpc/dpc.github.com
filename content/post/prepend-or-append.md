@@ -2,6 +2,7 @@
 date = "2016-01-15T21:37:51-07:00"
 draft = false
 title =  "Prepend or append to PATH like environment variable."
+tags = ["shell"]
 +++
 
 In Unix there are quite a lot variables representing path lists of different kind similar to `PATH` like `LD_LIBRARY_PATH`, `PKG_CONFIG_PATH`.

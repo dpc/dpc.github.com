@@ -2,6 +2,7 @@
 date = "2014-09-15T21:38:16-07:00"
 draft = false
 title = "Asynchronous GNU Readline printing"
+tags = ["shell", "c"]
 +++
 
 Some while ago I've spend my time developing a [XMPP command line client](http://github.com/dpc/xmppconsole) which is using [strophe XMPP library](http://code.stanziq.com/strophe/)

@@ -2,7 +2,7 @@
 date = "2016-09-15T21:38:16-07:00"
 draft = false
 title = "Precache all the things!"
-
+tags = ["shell"]
 +++
 
 ![funny meme](http://cdn.memegenerator.net/instances/400x/33671988.jpg)
