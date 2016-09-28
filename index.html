@@ -214,8 +214,9 @@ Then add it again.</p>
 <p>Or compiler errors because <code>{</code> is on a newline. Madness.</p>
 
 <p>Go compiler is happy when I don&rsquo;t check errors returned by a function (maybe by
-mistake), and I have to use <code>go vet</code> and <code>golint</code> to ensure they are no real
-issues, but it just won&rsquo;t let me be due to irrelevant details.</p>
+mistake), and I have to use <code>go vet</code> and <code>golint</code> to ensure there are no real
+obvious issues with my code, but it just won&rsquo;t let me be when it comes to
+irrelevant details.</p>
 
 <h3 id="small-things">Small things</h3>
 
@@ -224,18 +225,20 @@ issues, but it just won&rsquo;t let me be due to irrelevant details.</p>
 <pre><code class="language-go">AddUint32(&amp;x, ^uint32(c-1))
 </code></pre>
 
-<p>That&rsquo;s how. Easy to read, and self-explaining.
-<a href="https://golang.org/pkg/sync/atomic/">https://golang.org/pkg/sync/atomic/</a> . I mean&hellip; come on. It took similar time
-to write the comment explaining how to decrement, as it would take to write a
-much needed function that would just do it!</p>
+<p>That&rsquo;s how - described right in <a href="https://golang.org/pkg/sync/atomic/#AddUint32">atomic package comment for
+AddUint32</a>. Easy to read, and
+self-explaining.  I mean&hellip; come on. It took similar time to write the comment
+explaining how to decrement, as it would take to write a much needed function
+that would just do it!</p>
 
 <h3 id="community-doesn-t-like-me">Community doesn&rsquo;t like me</h3>
 
 <p>Couple of times I ventured into Go community gathering places, looking for
 advise on how to deal with some of the problems I was having. I don&rsquo;t know if
 it&rsquo;s me, or the fact that I was referring to mechanisms from other languages,
-that Go simply lacks, but every time I got rather hostile responses in tones of
-&ldquo;one true way of Go&rdquo;.</p>
+that Go simply lacks, but every time I got hostile responses in tones of &ldquo;one
+true way of Go&rdquo; and me being stupid for looking for alternatives to
+established Go conventions.</p>
 
             </div>
           </section>
