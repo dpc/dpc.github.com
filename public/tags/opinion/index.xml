@@ -47,7 +47,20 @@ behavior.&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;I think the best description of Go&amp;rsquo;s problems was &lt;a href=&#34;http://yager.io/programming/go.html&#34;&gt;Why Go Is Not Good&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Also interesting: &lt;a href=&#34;http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/&#34;&gt;I Love Go; I Hate Go&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Also interesting:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://nomad.so/2015/03/why-gos-design-is-a-disservice-to-intelligent-programmers/&#34;&gt;Why Go’s design is a disservice to intelligent
+programmers&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&amp;ldquo;In my opinion Go has been designed by people who have been using C all
+their lives and don’t want to try anything new. The language could be
+described as C with training wheels.&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/&#34;&gt;I Love Go; I Hate Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/ksimka/go-is-not-good&#34;&gt;Many, many articles explaining why Go is just bad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&#34;more-on-my-experiences-with-go&#34;&gt;More on my experiences with Go&lt;/h2&gt;
 
@@ -63,8 +76,6 @@ Go, and below is why I think Go is simply a bad programming language.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;nil&lt;/code&gt; keeps being the biggest source of frustration when working with code
 written in Go. &lt;code&gt;nil&lt;/code&gt; handling is inconsistent too with sometimes &lt;code&gt;nil&lt;/code&gt; being OK
 to use, and sometimes not so much.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;nil&lt;/code&gt; and lack of &lt;code&gt;Result&lt;/code&gt;/&lt;code&gt;Option&lt;/code&gt;/&lt;code&gt;Maybe&lt;/code&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;no-sane-error-handling&#34;&gt;No sane error handling&lt;/h3&gt;
 
@@ -110,7 +121,7 @@ let oN = try!(oN-1.DoSomethingN());
 predictable destructors, you don&amp;rsquo;t need cleanup calls 99% of the time! Files
 and sockets will be closed, http connections ended (or returned to the pool) etc.&lt;/p&gt;
 
-&lt;p&gt;As usually, when confroneted with the problem, &lt;a href=&#34;https://blog.golang.org/error-handling-and-go&#34;&gt;mildly-satisfying workarounds are given&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.golang.org/error-handling-and-go&#34;&gt;Mildly-satisfying workarounds are given&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;lack-of-generics&#34;&gt;Lack of generics&lt;/h3&gt;
 
