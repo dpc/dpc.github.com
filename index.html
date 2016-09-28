@@ -113,7 +113,20 @@ behavior.&rdquo;</a></p>
 
 <p>I think the best description of Go&rsquo;s problems was <a href="http://yager.io/programming/go.html">Why Go Is Not Good</a>.</p>
 
-<p>Also interesting: <a href="http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/">I Love Go; I Hate Go</a></p>
+<p>Also interesting:</p>
+
+<ul>
+<li><a href="http://nomad.so/2015/03/why-gos-design-is-a-disservice-to-intelligent-programmers/">Why Go’s design is a disservice to intelligent
+programmers</a>
+
+<ul>
+<li>&ldquo;In my opinion Go has been designed by people who have been using C all
+their lives and don’t want to try anything new. The language could be
+described as C with training wheels.&rdquo;</li>
+</ul></li>
+<li><a href="http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/">I Love Go; I Hate Go</a></li>
+<li><a href="https://github.com/ksimka/go-is-not-good">Many, many articles explaining why Go is just bad</a></li>
+</ul>
 
 <h2 id="more-on-my-experiences-with-go">More on my experiences with Go</h2>
 
@@ -129,8 +142,6 @@ Go, and below is why I think Go is simply a bad programming language.</p>
 <p><code>nil</code> keeps being the biggest source of frustration when working with code
 written in Go. <code>nil</code> handling is inconsistent too with sometimes <code>nil</code> being OK
 to use, and sometimes not so much.</p>
-
-<p><code>nil</code> and lack of <code>Result</code>/<code>Option</code>/<code>Maybe</code></p>
 
 <h3 id="no-sane-error-handling">No sane error handling</h3>
 
@@ -176,7 +187,7 @@ let oN = try!(oN-1.DoSomethingN());
 predictable destructors, you don&rsquo;t need cleanup calls 99% of the time! Files
 and sockets will be closed, http connections ended (or returned to the pool) etc.</p>
 
-<p>As usually, when confroneted with the problem, <a href="https://blog.golang.org/error-handling-and-go">mildly-satisfying workarounds are given</a></p>
+<p><a href="https://blog.golang.org/error-handling-and-go">Mildly-satisfying workarounds are given</a></p>
 
 <h3 id="lack-of-generics">Lack of generics</h3>
 
