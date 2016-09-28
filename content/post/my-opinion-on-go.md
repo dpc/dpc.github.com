@@ -54,9 +54,6 @@ Go, and below is why I think Go is simply a bad programming language.
 written in Go. `nil` handling is inconsistent too with sometimes `nil` being OK
 to use, and sometimes not so much.
 
-`nil` and lack of `Result`/`Option`/`Maybe`
-
-
 ### No sane error handling
 
 ```go
@@ -104,8 +101,7 @@ You might ask, where are the cleanup calls. Well, because Rust has guaranteed,
 predictable destructors, you don't need cleanup calls 99% of the time! Files
 and sockets will be closed, http connections ended (or returned to the pool) etc.
 
-As usually, when confroneted with the problem, [mildly-satisfying workarounds are given](https://blog.golang.org/error-handling-and-go)
-
+[Mildly-satisfying workarounds are given](https://blog.golang.org/error-handling-and-go)
 
 ### Lack of generics
 
