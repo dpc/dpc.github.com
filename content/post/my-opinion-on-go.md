@@ -34,7 +34,15 @@ Every time I write code in Go, I feel deeply disappointed.
 
 I think the best description of Go's problems was [Why Go Is Not Good](http://yager.io/programming/go.html).
 
-Also interesting: [I Love Go; I Hate Go](http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/)
+Also interesting: 
+
+* [Why Go’s design is a disservice to intelligent
+  programmers](http://nomad.so/2015/03/why-gos-design-is-a-disservice-to-intelligent-programmers/)
+  - "In my opinion Go has been designed by people who have been using C all
+  their lives and don’t want to try anything new. The language could be
+  described as C with training wheels."
+* [I Love Go; I Hate Go](http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/)
+* [Many, many articles explaining why Go is just bad](https://github.com/ksimka/go-is-not-good)
 
 [landmines]: https://gist.github.com/lavalamp/4bd23295a9f32706a48f
 
