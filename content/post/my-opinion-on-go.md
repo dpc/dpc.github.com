@@ -136,9 +136,9 @@ Why it can't be just a warning? Why is it *that* important for all the
 Or compiler errors because `{` is on a newline. Madness.
 
 Go compiler is happy when I don't check errors returned by a function (maybe by
-mistake), and I have to use `go vet` and `golint` to ensure they are no real
-issues, but it just won't let me be due to irrelevant details.
-
+mistake), and I have to use `go vet` and `golint` to ensure there are no real
+obvious issues with my code, but it just won't let me be when it comes to
+irrelevant details.
 
 ### Small things
 
@@ -148,15 +148,17 @@ How do you decrement an atomic in Go?
 AddUint32(&x, ^uint32(c-1))
 ```
 
-That's how. Easy to read, and self-explaining.
-https://golang.org/pkg/sync/atomic/ . I mean... come on. It took similar time
-to write the comment explaining how to decrement, as it would take to write a
-much needed function that would just do it!
+That's how - described right in [atomic package comment for
+AddUint32](https://golang.org/pkg/sync/atomic/#AddUint32). Easy to read, and
+self-explaining.  I mean... come on. It took similar time to write the comment
+explaining how to decrement, as it would take to write a much needed function
+that would just do it!
 
 ### Community doesn't like me
 
 Couple of times I ventured into Go community gathering places, looking for
 advise on how to deal with some of the problems I was having. I don't know if
 it's me, or the fact that I was referring to mechanisms from other languages,
-that Go simply lacks, but every time I got rather hostile responses in tones of
-"one true way of Go".
+that Go simply lacks, but every time I got hostile responses in tones of "one
+true way of Go" and me being stupid for looking for alternatives to
+established Go conventions.

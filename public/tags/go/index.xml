@@ -148,8 +148,9 @@ Then add it again.&lt;/p&gt;
 &lt;p&gt;Or compiler errors because &lt;code&gt;{&lt;/code&gt; is on a newline. Madness.&lt;/p&gt;
 
 &lt;p&gt;Go compiler is happy when I don&amp;rsquo;t check errors returned by a function (maybe by
-mistake), and I have to use &lt;code&gt;go vet&lt;/code&gt; and &lt;code&gt;golint&lt;/code&gt; to ensure they are no real
-issues, but it just won&amp;rsquo;t let me be due to irrelevant details.&lt;/p&gt;
+mistake), and I have to use &lt;code&gt;go vet&lt;/code&gt; and &lt;code&gt;golint&lt;/code&gt; to ensure there are no real
+obvious issues with my code, but it just won&amp;rsquo;t let me be when it comes to
+irrelevant details.&lt;/p&gt;
 
 &lt;h3 id=&#34;small-things&#34;&gt;Small things&lt;/h3&gt;
 
@@ -158,18 +159,20 @@ issues, but it just won&amp;rsquo;t let me be due to irrelevant details.&lt;/p&g
 &lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;AddUint32(&amp;amp;x, ^uint32(c-1))
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That&amp;rsquo;s how. Easy to read, and self-explaining.
-&lt;a href=&#34;https://golang.org/pkg/sync/atomic/&#34;&gt;https://golang.org/pkg/sync/atomic/&lt;/a&gt; . I mean&amp;hellip; come on. It took similar time
-to write the comment explaining how to decrement, as it would take to write a
-much needed function that would just do it!&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s how - described right in &lt;a href=&#34;https://golang.org/pkg/sync/atomic/#AddUint32&#34;&gt;atomic package comment for
+AddUint32&lt;/a&gt;. Easy to read, and
+self-explaining.  I mean&amp;hellip; come on. It took similar time to write the comment
+explaining how to decrement, as it would take to write a much needed function
+that would just do it!&lt;/p&gt;
 
 &lt;h3 id=&#34;community-doesn-t-like-me&#34;&gt;Community doesn&amp;rsquo;t like me&lt;/h3&gt;
 
 &lt;p&gt;Couple of times I ventured into Go community gathering places, looking for
 advise on how to deal with some of the problems I was having. I don&amp;rsquo;t know if
 it&amp;rsquo;s me, or the fact that I was referring to mechanisms from other languages,
-that Go simply lacks, but every time I got rather hostile responses in tones of
-&amp;ldquo;one true way of Go&amp;rdquo;.&lt;/p&gt;
+that Go simply lacks, but every time I got hostile responses in tones of &amp;ldquo;one
+true way of Go&amp;rdquo; and me being stupid for looking for alternatives to
+established Go conventions.&lt;/p&gt;
 </description>
     </item>
     
