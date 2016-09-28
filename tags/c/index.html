@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C &middot; dpc&#39;s blog</title>
+
+  <meta name="description" content="Random posts about stuff.">
+
+  <meta name="generator" content="Hugo 0.16" />
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="C &middot; dpc&#39;s blog">
+  <meta name="twitter:description" content="Random posts about stuff.">
+
+  <meta property="og:title" content="C &middot; dpc&#39;s blog">
+  <meta property="og:type" content="blog">
+  <meta property="og:description" content="Random posts about stuff.">
+  
+
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Oxygen:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="http://dpc.pw//css/all.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="alternate" type="application/rss+xml" title="dpc&#39;s blog" href="http://dpc.pw//index.xml" />
+</head>
+<body>
+
+
+<div id="layout" class="pure-g">
+  <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    <hgroup>
+      <h1 class="brand-title"><a href="http://dpc.pw/">dpc&#39;s blog</a></h1>
+      <h2 class="brand-tagline">Random posts about stuff.</h2>
+    </hgroup>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        
+        
+        <li class="nav-item">
+          <a class="pure-button" href="http://dpc.pw//index.xml"><i class="fa fa-rss"></i> rss</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+
+</div>
+
+
+  <div class="content pure-u-1 pure-u-md-3-4">
+    <div>
+      
+      <div class="posts">
+        
+          <h1 class="content-subhead">
+  2014-09-15
+  <p class="post-meta">
+    
+    
+    
+      <a class="post-tags post-tags-shell" href="http://dpc.pw//tags/shell">shell</a><a class="post-tags post-tags-c" href="http://dpc.pw//tags/c">c</a>
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+
+              <a href="http://dpc.pw/asynchronous-gnu-readline-printing/" class="post-title">Asynchronous GNU Readline printing</a>
+            </header>
+
+            <div class="post-description">
+              <p>Some while ago I&rsquo;ve spend my time developing a <a href="http://github.com/dpc/xmppconsole">XMPP command line client</a> which is using <a href="http://code.stanziq.com/strophe/">strophe XMPP library</a>
+to handle XMPP and <a href="http://tiswww.case.edu/php/chet/readline/rltop.html">GNU Readline</a> for I/O.</p>
+
+<p>The idea was to have a readline prompt at the bottom and yet be able to asynchronously print incoming messages above it - in the &ldquo;log window&rdquo;.</p>
+
+<p>It seems that many people were looking for solution already:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1512028/gnu-readline-how-do-clear-the-input-line">GNU Readline: how do clear the input line?</a></li>
+<li><a href="http://stackoverflow.com/questions/691652/using-gnu-readline-how-can-i-add-ncurses-in-the-same-program">Using GNU Readline; how can I add ncurses in the same program?</a></li>
+</ul>
+
+<p>I haven&rsquo;t found any satisfying answer on the web so I&rsquo;d like to present my own solution.</p>
+
+<p>Basic idea is to use alternate (asynchronous) GNU Readline interface and on each new asynchronous print:</p>
+
+<ul>
+<li>save a copy of current line state</li>
+<li>clear both prompt and current line (content + position)</li>
+<li>force screen update</li>
+<li>print asynchronous event (followed by a newline)</li>
+<li>restore prompt and current line state</li>
+<li>force screen update</li>
+</ul>
+
+<p>Simple it is, indeed and you can see <a href="http://github.com/dpc/xmppconsole/blob/master/src/io.c">a working code</a> if you don&rsquo;t believe.</p>
+
+<p>The only thing that I was unable to get is preventing putting the original confirmed readline buffer in &ldquo;log window&rdquo;. As this is not a big deal for my requirements the complete and universal solution would be able to change what the user typed in the readline buffer just before it&rsquo;s getting scrolled up and becoming part of the &ldquo;log window&rdquo;.</p>
+
+<p>I hope someone will fine it useful, like I do.</p>
+
+<p>Update:</p>
+
+<p>Below is a patch by Denis Linvinus:</p>
+
+<p><a href="http://pastebin.com/SA87Lxqq">http://pastebin.com/SA87Lxqq</a></p>
+
+<p>that he uses to get more &ldquo;unrestricted log window with a prompt&rdquo; for his project and wanted me to share with you too. Generally, I think it&rsquo;s a bit unclean because of using vt100 escape sequences so I&rsquo;m not going to merge it, but if anyone finds it useful, it&rsquo;s good for everyone.</p>
+
+            </div>
+          </section>
+        
+      </div>
+      
+
+      <div class="footer">
+  <div class="pure-menu pure-menu-horizontal pure-menu-open">
+    <ul>
+      <li>Powered by <a class="hugo" href="http://hugo.spf13.com/" target="_blank">hugo</a></li>
+    </ul>
+  </div>
+</div>
+<script src="http://dpc.pw//js/all.min.js"></script>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

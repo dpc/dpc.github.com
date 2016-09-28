@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rant &middot; dpc&#39;s blog</title>
+
+  <meta name="description" content="Random posts about stuff.">
+
+  <meta name="generator" content="Hugo 0.16" />
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:title" content="Rant &middot; dpc&#39;s blog">
+  <meta name="twitter:description" content="Random posts about stuff.">
+
+  <meta property="og:title" content="Rant &middot; dpc&#39;s blog">
+  <meta property="og:type" content="blog">
+  <meta property="og:description" content="Random posts about stuff.">
+  
+
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Oxygen:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  <!--[if lte IE 8]>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="http://dpc.pw//css/all.min.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="alternate" type="application/rss+xml" title="dpc&#39;s blog" href="http://dpc.pw//index.xml" />
+</head>
+<body>
+
+
+<div id="layout" class="pure-g">
+  <div class="sidebar pure-u-1 pure-u-md-1-4">
+  <div class="header">
+    <hgroup>
+      <h1 class="brand-title"><a href="http://dpc.pw/">dpc&#39;s blog</a></h1>
+      <h2 class="brand-tagline">Random posts about stuff.</h2>
+    </hgroup>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        
+        
+        <li class="nav-item">
+          <a class="pure-button" href="http://dpc.pw//index.xml"><i class="fa fa-rss"></i> rss</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+
+</div>
+
+
+  <div class="content pure-u-1 pure-u-md-3-4">
+    <div>
+      
+      <div class="posts">
+        
+          <h1 class="content-subhead">
+  2016-09-27
+  <p class="post-meta">
+    
+    
+    
+      <a class="post-tags post-tags-go" href="http://dpc.pw//tags/go">go</a><a class="post-tags post-tags-opinion" href="http://dpc.pw//tags/opinion">opinion</a><a class="post-tags post-tags-rant" href="http://dpc.pw//tags/rant">rant</a>
+    
+    
+  </p>
+</h1>
+
+          <section class="post">
+            <header class="post-header">
+
+              <a href="http://dpc.pw/my-opinion-on-go/" class="post-title">My opinion on Go</a>
+            </header>
+
+            <div class="post-description">
+              
+
+<h2 id="tl-dr">TL;DR</h2>
+
+<p>The biggest strength of Go, IMO, was the FAD created by the fact that it is
+&ldquo;backed by Google&rdquo;. That gave Go immediate traction, and bootstrapped a
+decently sized ecosystem. Everybody know about it, and have somewhat positive
+attitude thinking &ldquo;it&rsquo;s simple, fast, and easy to learn&rdquo;.</p>
+
+<p>I enjoy (Crude but still) static typing, compiling to native
+code, and most of all: native-green thread support make Go quite productive for
+server side code. You just have to get used to many workarounds for lack of
+generics, remember about avoid all the <a href="https://gist.github.com/lavalamp/4bd23295a9f32706a48f">Go landmines</a> and don&rsquo;t mind poor
+expressiveness.</p>
+
+<p>My favourite thing about Go, is that it produces static, native binaries.
+Unlike software written in Python, using software writing in Go is always
+painless.</p>
+
+<p>However overall, Go is poorly designed language full of painful archaisms. It
+ignores multiple great ideas from programming languages research and other PL
+experiences.</p>
+
+<p><a href="https://news.ycombinator.com/item?id=12525949">&ldquo;Go&rsquo;s simplicity is syntactic. The complexity is in semantics and runtime
+behavior.&rdquo;</a></p>
+
+<p>Every time I write code in Go, I feel deeply disappointed.</p>
+
+<h2 id="reading-material">Reading material</h2>
+
+<p>I think the best description of Go&rsquo;s problems was <a href="http://yager.io/programming/go.html">Why Go Is Not Good</a>.</p>
+
+<p>Also interesting: <a href="http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/">I Love Go; I Hate Go</a></p>
+
+<h2 id="more-on-my-experiences-with-go">More on my experiences with Go</h2>
+
+<p>While I was following Go programming language since it&rsquo;s announcement and even
+did some learning and toying with it, only recently I had opportunity to try Go
+in real projects. For the last couple of months I&rsquo;ve been working a lot with
+Go, and below is why I think Go is simply a bad programming language.</p>
+
+<h3 id="nil">Nil</h3>
+
+<p><code>nil</code>/<code>null</code> should not exists in any recent programming language.</p>
+
+<p><code>nil</code> keeps being the biggest source of frustration when working with code
+written in Go. <code>nil</code> handling is inconsistent too with sometimes <code>nil</code> being OK
+to use, and sometimes not so much.</p>
+
+<p><code>nil</code> and lack of <code>Result</code>/<code>Option</code>/<code>Maybe</code></p>
+
+<h3 id="no-sane-error-handling">No sane error handling</h3>
+
+<pre><code class="language-go">o1, err := DoSomething1()
+if err != nil {
+    return
+}
+defer Cleanup(o1)
+
+o2, err := o2.DoSomething2()
+if err != nil {
+    return
+}
+defer Cleanup2(o2)
+
+…
+
+oN, err := oN-1.DoSomethingN()
+if err != nil {
+    return
+}
+defer CleanupN(oN)
+</code></pre>
+
+<p>compare the above with corresponding Rust code:</p>
+
+<pre><code class="language-rust">let o1 = try!(DoSomething1());
+let o2 = try!(o1.DoSomething2());
+…
+let oN = try!(oN-1.DoSomethingN());
+</code></pre>
+
+<p>or</p>
+
+<pre><code class="language-rust">DoSomething1()
+   .and_then(|o1| o1.DoSomething2())
+   .and_then(|o2| o2.DoSomething2())
+   …
+   .and_then(|oN| oN.DoSomethingN())
+</code></pre>
+
+<p>You might ask, where are the cleanup calls. Well, because Rust has guaranteed,
+predictable destructors, you don&rsquo;t need cleanup calls 99% of the time! Files
+and sockets will be closed, http connections ended (or returned to the pool) etc.</p>
+
+<p>As usually, when confroneted with the problem, <a href="https://blog.golang.org/error-handling-and-go">mildly-satisfying workarounds are given</a></p>
+
+<h3 id="lack-of-generics">Lack of generics</h3>
+
+<p>It seems to me lack of generic support is the root cause of all other problems.</p>
+
+<p>Go has <code>nil</code> because without some form of generics, having a <code>Option</code> is not
+possible.</p>
+
+<p>Go has poor error handling, as something like Rust&rsquo;s <code>Result</code> can not be used
+without generics.</p>
+
+<p>Go has no proper collections, and you weird <code>make</code> invocations are required
+because it lacks generics.</p>
+
+<h3 id="annoyingness">Annoyingness</h3>
+
+<p>I fiddle with the code to try something out, I get an error that something is
+not used anymore. I have to remove the <code>import</code> to make the compiler happy.
+Then add it again.</p>
+
+<p>Why it can&rsquo;t be just a warning? Why is it <em>that</em> important for all the
+<code>imports</code> to really be used?</p>
+
+<p>Or compiler errors because <code>{</code> is on a newline. Madness.</p>
+
+<p>Go compiler is happy when I don&rsquo;t check errors returned by a function (maybe by
+mistake), and I have to use <code>go vet</code> and <code>golint</code> to ensure they are no real
+issues, but it just won&rsquo;t let me be due to irrelevant details.</p>
+
+<h3 id="small-things">Small things</h3>
+
+<p>How do you decrement an atomic in Go?</p>
+
+<pre><code class="language-go">AddUint32(&amp;x, ^uint32(c-1))
+</code></pre>
+
+<p>That&rsquo;s how. Easy to read, and self-explaining.
+<a href="https://golang.org/pkg/sync/atomic/">https://golang.org/pkg/sync/atomic/</a> . I mean&hellip; come on. It took similar time
+to write the comment explaining how to decrement, as it would take to write a
+much needed function that would just do it!</p>
+
+<h3 id="community-doesn-t-like-me">Community doesn&rsquo;t like me</h3>
+
+<p>Couple of times I ventured into Go community gathering places, looking for
+advise on how to deal with some of the problems I was having. I don&rsquo;t know if
+it&rsquo;s me, or the fact that I was referring to mechanisms from other languages,
+that Go simply lacks, but every time I got rather hostile responses in tones of
+&ldquo;one true way of Go&rdquo;.</p>
+
+            </div>
+          </section>
+        
+      </div>
+      
+
+      <div class="footer">
+  <div class="pure-menu pure-menu-horizontal pure-menu-open">
+    <ul>
+      <li>Powered by <a class="hugo" href="http://hugo.spf13.com/" target="_blank">hugo</a></li>
+    </ul>
+  </div>
+</div>
+<script src="http://dpc.pw//js/all.min.js"></script>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

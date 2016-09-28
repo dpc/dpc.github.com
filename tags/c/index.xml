@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C on dpc&#39;s blog</title>
+    <link>http://dpc.pw/tags/c/</link>
+    <description>Recent content in C on dpc&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 15 Sep 2014 21:38:16 -0700</lastBuildDate>
+    <atom:link href="http://dpc.pw/tags/c/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Asynchronous GNU Readline printing</title>
+      <link>http://dpc.pw/asynchronous-gnu-readline-printing/</link>
+      <pubDate>Mon, 15 Sep 2014 21:38:16 -0700</pubDate>
+      
+      <guid>http://dpc.pw/asynchronous-gnu-readline-printing/</guid>
+      <description>&lt;p&gt;Some while ago I&amp;rsquo;ve spend my time developing a &lt;a href=&#34;http://github.com/dpc/xmppconsole&#34;&gt;XMPP command line client&lt;/a&gt; which is using &lt;a href=&#34;http://code.stanziq.com/strophe/&#34;&gt;strophe XMPP library&lt;/a&gt;
+to handle XMPP and &lt;a href=&#34;http://tiswww.case.edu/php/chet/readline/rltop.html&#34;&gt;GNU Readline&lt;/a&gt; for I/O.&lt;/p&gt;
+
+&lt;p&gt;The idea was to have a readline prompt at the bottom and yet be able to asynchronously print incoming messages above it - in the &amp;ldquo;log window&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;It seems that many people were looking for solution already:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/1512028/gnu-readline-how-do-clear-the-input-line&#34;&gt;GNU Readline: how do clear the input line?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/691652/using-gnu-readline-how-can-i-add-ncurses-in-the-same-program&#34;&gt;Using GNU Readline; how can I add ncurses in the same program?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I haven&amp;rsquo;t found any satisfying answer on the web so I&amp;rsquo;d like to present my own solution.&lt;/p&gt;
+
+&lt;p&gt;Basic idea is to use alternate (asynchronous) GNU Readline interface and on each new asynchronous print:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;save a copy of current line state&lt;/li&gt;
+&lt;li&gt;clear both prompt and current line (content + position)&lt;/li&gt;
+&lt;li&gt;force screen update&lt;/li&gt;
+&lt;li&gt;print asynchronous event (followed by a newline)&lt;/li&gt;
+&lt;li&gt;restore prompt and current line state&lt;/li&gt;
+&lt;li&gt;force screen update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Simple it is, indeed and you can see &lt;a href=&#34;http://github.com/dpc/xmppconsole/blob/master/src/io.c&#34;&gt;a working code&lt;/a&gt; if you don&amp;rsquo;t believe.&lt;/p&gt;
+
+&lt;p&gt;The only thing that I was unable to get is preventing putting the original confirmed readline buffer in &amp;ldquo;log window&amp;rdquo;. As this is not a big deal for my requirements the complete and universal solution would be able to change what the user typed in the readline buffer just before it&amp;rsquo;s getting scrolled up and becoming part of the &amp;ldquo;log window&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;I hope someone will fine it useful, like I do.&lt;/p&gt;
+
+&lt;p&gt;Update:&lt;/p&gt;
+
+&lt;p&gt;Below is a patch by Denis Linvinus:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://pastebin.com/SA87Lxqq&#34;&gt;http://pastebin.com/SA87Lxqq&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;that he uses to get more &amp;ldquo;unrestricted log window with a prompt&amp;rdquo; for his project and wanted me to share with you too. Generally, I think it&amp;rsquo;s a bit unclean because of using vt100 escape sequences so I&amp;rsquo;m not going to merge it, but if anyone finds it useful, it&amp;rsquo;s good for everyone.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
