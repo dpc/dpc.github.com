@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rant on dpc&#39;s blog</title>
+    <link>http://dpc.pw/tags/rant/</link>
+    <description>Recent content in Rant on dpc&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 27 Sep 2016 18:12:41 -0700</lastBuildDate>
+    <atom:link href="http://dpc.pw/tags/rant/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>My opinion on Go</title>
+      <link>http://dpc.pw/my-opinion-on-go/</link>
+      <pubDate>Tue, 27 Sep 2016 18:12:41 -0700</pubDate>
+      
+      <guid>http://dpc.pw/my-opinion-on-go/</guid>
+      <description>
+
+&lt;h2 id=&#34;tl-dr&#34;&gt;TL;DR&lt;/h2&gt;
+
+&lt;p&gt;The biggest strength of Go, IMO, was the FAD created by the fact that it is
+&amp;ldquo;backed by Google&amp;rdquo;. That gave Go immediate traction, and bootstrapped a
+decently sized ecosystem. Everybody know about it, and have somewhat positive
+attitude thinking &amp;ldquo;it&amp;rsquo;s simple, fast, and easy to learn&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;I enjoy (Crude but still) static typing, compiling to native
+code, and most of all: native-green thread support make Go quite productive for
+server side code. You just have to get used to many workarounds for lack of
+generics, remember about avoid all the &lt;a href=&#34;https://gist.github.com/lavalamp/4bd23295a9f32706a48f&#34;&gt;Go landmines&lt;/a&gt; and don&amp;rsquo;t mind poor
+expressiveness.&lt;/p&gt;
+
+&lt;p&gt;My favourite thing about Go, is that it produces static, native binaries.
+Unlike software written in Python, using software writing in Go is always
+painless.&lt;/p&gt;
+
+&lt;p&gt;However overall, Go is poorly designed language full of painful archaisms. It
+ignores multiple great ideas from programming languages research and other PL
+experiences.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://news.ycombinator.com/item?id=12525949&#34;&gt;&amp;ldquo;Go&amp;rsquo;s simplicity is syntactic. The complexity is in semantics and runtime
+behavior.&amp;rdquo;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Every time I write code in Go, I feel deeply disappointed.&lt;/p&gt;
+
+&lt;h2 id=&#34;reading-material&#34;&gt;Reading material&lt;/h2&gt;
+
+&lt;p&gt;I think the best description of Go&amp;rsquo;s problems was &lt;a href=&#34;http://yager.io/programming/go.html&#34;&gt;Why Go Is Not Good&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also interesting: &lt;a href=&#34;http://dtrace.org/blogs/ahl/2016/08/02/i-love-go-i-hate-go/&#34;&gt;I Love Go; I Hate Go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;more-on-my-experiences-with-go&#34;&gt;More on my experiences with Go&lt;/h2&gt;
+
+&lt;p&gt;While I was following Go programming language since it&amp;rsquo;s announcement and even
+did some learning and toying with it, only recently I had opportunity to try Go
+in real projects. For the last couple of months I&amp;rsquo;ve been working a lot with
+Go, and below is why I think Go is simply a bad programming language.&lt;/p&gt;
+
+&lt;h3 id=&#34;nil&#34;&gt;Nil&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;nil&lt;/code&gt;/&lt;code&gt;null&lt;/code&gt; should not exists in any recent programming language.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;nil&lt;/code&gt; keeps being the biggest source of frustration when working with code
+written in Go. &lt;code&gt;nil&lt;/code&gt; handling is inconsistent too with sometimes &lt;code&gt;nil&lt;/code&gt; being OK
+to use, and sometimes not so much.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;nil&lt;/code&gt; and lack of &lt;code&gt;Result&lt;/code&gt;/&lt;code&gt;Option&lt;/code&gt;/&lt;code&gt;Maybe&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;no-sane-error-handling&#34;&gt;No sane error handling&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;o1, err := DoSomething1()
+if err != nil {
+    return
+}
+defer Cleanup(o1)
+
+o2, err := o2.DoSomething2()
+if err != nil {
+    return
+}
+defer Cleanup2(o2)
+
+…
+
+oN, err := oN-1.DoSomethingN()
+if err != nil {
+    return
+}
+defer CleanupN(oN)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;compare the above with corresponding Rust code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;let o1 = try!(DoSomething1());
+let o2 = try!(o1.DoSomething2());
+…
+let oN = try!(oN-1.DoSomethingN());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;DoSomething1()
+   .and_then(|o1| o1.DoSomething2())
+   .and_then(|o2| o2.DoSomething2())
+   …
+   .and_then(|oN| oN.DoSomethingN())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You might ask, where are the cleanup calls. Well, because Rust has guaranteed,
+predictable destructors, you don&amp;rsquo;t need cleanup calls 99% of the time! Files
+and sockets will be closed, http connections ended (or returned to the pool) etc.&lt;/p&gt;
+
+&lt;p&gt;As usually, when confroneted with the problem, &lt;a href=&#34;https://blog.golang.org/error-handling-and-go&#34;&gt;mildly-satisfying workarounds are given&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;lack-of-generics&#34;&gt;Lack of generics&lt;/h3&gt;
+
+&lt;p&gt;It seems to me lack of generic support is the root cause of all other problems.&lt;/p&gt;
+
+&lt;p&gt;Go has &lt;code&gt;nil&lt;/code&gt; because without some form of generics, having a &lt;code&gt;Option&lt;/code&gt; is not
+possible.&lt;/p&gt;
+
+&lt;p&gt;Go has poor error handling, as something like Rust&amp;rsquo;s &lt;code&gt;Result&lt;/code&gt; can not be used
+without generics.&lt;/p&gt;
+
+&lt;p&gt;Go has no proper collections, and you weird &lt;code&gt;make&lt;/code&gt; invocations are required
+because it lacks generics.&lt;/p&gt;
+
+&lt;h3 id=&#34;annoyingness&#34;&gt;Annoyingness&lt;/h3&gt;
+
+&lt;p&gt;I fiddle with the code to try something out, I get an error that something is
+not used anymore. I have to remove the &lt;code&gt;import&lt;/code&gt; to make the compiler happy.
+Then add it again.&lt;/p&gt;
+
+&lt;p&gt;Why it can&amp;rsquo;t be just a warning? Why is it &lt;em&gt;that&lt;/em&gt; important for all the
+&lt;code&gt;imports&lt;/code&gt; to really be used?&lt;/p&gt;
+
+&lt;p&gt;Or compiler errors because &lt;code&gt;{&lt;/code&gt; is on a newline. Madness.&lt;/p&gt;
+
+&lt;p&gt;Go compiler is happy when I don&amp;rsquo;t check errors returned by a function (maybe by
+mistake), and I have to use &lt;code&gt;go vet&lt;/code&gt; and &lt;code&gt;golint&lt;/code&gt; to ensure they are no real
+issues, but it just won&amp;rsquo;t let me be due to irrelevant details.&lt;/p&gt;
+
+&lt;h3 id=&#34;small-things&#34;&gt;Small things&lt;/h3&gt;
+
+&lt;p&gt;How do you decrement an atomic in Go?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;AddUint32(&amp;amp;x, ^uint32(c-1))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s how. Easy to read, and self-explaining.
+&lt;a href=&#34;https://golang.org/pkg/sync/atomic/&#34;&gt;https://golang.org/pkg/sync/atomic/&lt;/a&gt; . I mean&amp;hellip; come on. It took similar time
+to write the comment explaining how to decrement, as it would take to write a
+much needed function that would just do it!&lt;/p&gt;
+
+&lt;h3 id=&#34;community-doesn-t-like-me&#34;&gt;Community doesn&amp;rsquo;t like me&lt;/h3&gt;
+
+&lt;p&gt;Couple of times I ventured into Go community gathering places, looking for
+advise on how to deal with some of the problems I was having. I don&amp;rsquo;t know if
+it&amp;rsquo;s me, or the fact that I was referring to mechanisms from other languages,
+that Go simply lacks, but every time I got rather hostile responses in tones of
+&amp;ldquo;one true way of Go&amp;rdquo;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
