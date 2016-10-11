@@ -11,7 +11,7 @@ The biggest strength of Go, IMO, was the FAD created by the fact that it is
 decently sized ecosystem. Everybody know about it, and have somewhat positive
 attitude thinking "it's simple, fast, and easy to learn".
 
-I enjoy (Crude but still) static typing, compiling to native
+I enjoy (crude but still) static typing, compiling to native
 code, and most of all: native-green thread, making Go quite productive for
 server side code. I just had to get used to many workarounds for lack of
 generics, remember about avoid all the [Go landmines][landmines] and ignore
