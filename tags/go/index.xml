@@ -24,7 +24,7 @@
 decently sized ecosystem. Everybody know about it, and have somewhat positive
 attitude thinking &amp;ldquo;it&amp;rsquo;s simple, fast, and easy to learn&amp;rdquo;.&lt;/p&gt;
 
-&lt;p&gt;I enjoy (Crude but still) static typing, compiling to native
+&lt;p&gt;I enjoy (crude but still) static typing, compiling to native
 code, and most of all: native-green thread, making Go quite productive for
 server side code. I just had to get used to many workarounds for lack of
 generics, remember about avoid all the &lt;a href=&#34;https://gist.github.com/lavalamp/4bd23295a9f32706a48f&#34;&gt;Go landmines&lt;/a&gt; and ignore
