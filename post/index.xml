@@ -6,8 +6,145 @@
     <description>Recent content in Posts on dpc&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 27 Sep 2016 18:12:41 -0700</lastBuildDate>
+    <lastBuildDate>Mon, 10 Oct 2016 20:39:45 -0700</lastBuildDate>
     <atom:link href="http://dpc.pw/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>On state pollution</title>
+      <link>http://dpc.pw/on-state-pollution/</link>
+      <pubDate>Mon, 10 Oct 2016 20:39:45 -0700</pubDate>
+      
+      <guid>http://dpc.pw/on-state-pollution/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;d like to share an method I&amp;rsquo;ve developed on how to judge a code. This method
+uses a metric that I named &lt;em&gt;state pollution&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note: I am not well versed in academic Computer Science nomenclature and just
+trying to be precise in my explanation. Be aware that I might be wrong
+somewhere and please feel free to correct me if I&amp;rsquo;m naming something wrong or
+misusing concepts. Maybe someone already described something like that (or
+better). Please refer me right places if it the case.&lt;/p&gt;
+
+&lt;p&gt;First, I use &lt;em&gt;state&lt;/em&gt; as a synonym of &lt;em&gt;entropy&lt;/em&gt; or &lt;em&gt;amount of information&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;State pollution&lt;/em&gt; of a fragment of a code is an amount of &lt;em&gt;aggregate visible state&lt;/em&gt;
+that fragment adds to the whole code.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Aggregate visible state&lt;/em&gt; is sum of &lt;em&gt;visible state&lt;/em&gt; of every executable line of
+the code.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Visible state&lt;/em&gt; of a piece/line of code is the amount of &lt;em&gt;state&lt;/em&gt; this code can
+access (&lt;em&gt;readable visible state&lt;/em&gt;) or modify (&lt;em&gt;writeable visible state&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;The state is measured in bits. Eg. boolean variable can be only in two states:
+&lt;code&gt;true&lt;/code&gt; or &lt;code&gt;false&lt;/code&gt;. This is 1 bit of information. A C-language &lt;code&gt;char&lt;/code&gt; has 256
+possible values, which is 8 bits.&lt;/p&gt;
+
+&lt;p&gt;The following Rust Hello World example has 0-bits of &lt;em&gt;aggregate visible state&lt;/em&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;fn main() {
+    println!(&amp;quot;Hello world!&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above code has only one effective line of code: &lt;code&gt;println!(...)&lt;/code&gt; and that line has no variables to access or modify.&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s say we&amp;rsquo;re going to add a pointless mutable &lt;code&gt;8-bit&lt;/code&gt; variable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;fn main() {
+    let mut x = 0u8;
+    println!(&amp;quot;Hello world!&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This new line makes it potentially possible for &lt;code&gt;println!(...)&lt;/code&gt; to print a text
+dependent on it&amp;rsquo;s value. So the &lt;em&gt;aggregate visible state&lt;/em&gt; of the code is now &lt;code&gt;8-bits&lt;/code&gt;, and
+the &lt;em&gt;state pollution&lt;/em&gt; introduced by new line is &lt;code&gt;8-bits&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Not that if &lt;code&gt;mut&lt;/code&gt; keyword was removed, &lt;code&gt;println!(...)&lt;/code&gt; could potentially print
+&lt;code&gt;x&lt;/code&gt;, but not modify it (as variables are immutable by default in Rust). That
+would cause &lt;em&gt;aggregate writeable visible state&lt;/em&gt; to stay equal to 0, increasing
+only &lt;em&gt;readable visible state&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note: this whole &lt;em&gt;entropy&lt;/em&gt; calculation is not meant to be precise. It is to be thought of
+as &lt;a href=&#34;https://en.wikipedia.org/wiki/Big_O_notation&#34;&gt;Big O Notation&lt;/a&gt;. It&amp;rsquo;s the magnitude that is important, not the exact values! To mimic &lt;code&gt;O(...)&lt;/code&gt;
+I&amp;rsquo;m going to use similar &lt;code&gt;P(...)&lt;/code&gt; where &lt;em&gt;P&lt;/em&gt; stands for &lt;em&gt;pollution&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;I hope the concept is clear now. Now let&amp;rsquo;s get to while it&amp;rsquo;s useful. I find
+&lt;em&gt;state pollution&lt;/em&gt; metric to be generalization of many other more-specific ways
+to judge the code, and corresponding to &amp;ldquo;good practices&amp;rdquo; and judgments about the
+code that people develop with experience.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-is-using-enumerator-better-than-an-integer&#34;&gt;Why is using enumerator better than an integer&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s compare:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;enum State {
+    Open,
+    Connected,
+    Errored
+}
+
+state : State;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;vs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-rust&#34;&gt;state : uint;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;state&lt;/code&gt; that is an enumerator have only 3 possible values (entropy = 1.5 bits). &lt;code&gt;state&lt;/code&gt; that is just an integer,
+has a lot more possible values, thus introducing more &lt;em&gt;state pollution&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-are-local-values-preferable-over-globals&#34;&gt;Why are local values preferable over globals&lt;/h2&gt;
+
+&lt;p&gt;Most programmers would agree that avoiding global values in any code is a good
+practice. Using &lt;em&gt;state pollution&lt;/em&gt; metric one could say that, a global variable
+has a &lt;code&gt;P(n*e)&lt;/code&gt; where &lt;code&gt;n&lt;/code&gt; is number of lines of the whole code and &lt;code&gt;e&lt;/code&gt; is a entropy of the
+variable itself (1-bit for boolean, 8-bit for C-language char, etc.). In contrast
+local variable has a &lt;code&gt;P(m*e)&lt;/code&gt; where &lt;code&gt;m&lt;/code&gt; is total number of lines of one
+function.  As &lt;code&gt;n &amp;gt;= m&lt;/code&gt; using local variables instead of global is minimizing
+&lt;em&gt;aggregate visible state pollution&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Natural language explanation simple: every global variable in your code makes
+every line of your code potentially do something different depending on the value
+of that variable.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-is-static-typing-preferable-over-dynamic-typing&#34;&gt;Why is static typing preferable over dynamic typing?&lt;/h2&gt;
+
+&lt;p&gt;In statically-typed languages &lt;code&gt;bool&lt;/code&gt; can have only two values. That&amp;rsquo;s enforced.
+In dynamically-typed, every variable can potentially have any value of any
+type. Variables in dynamically-typed languages introduce more &lt;em&gt;state
+pollution&lt;/em&gt;. Obviously code written in dynamically-typed language variables
+doesn&amp;rsquo;t always abuse that, but as a possibility - it&amp;rsquo;s always there, in every
+variable. Maybe by mistake, maybe on purpose, and change to the code could
+introduce a new state. So &lt;em&gt;state pollution&lt;/em&gt; is there, maybe just discounted a
+little.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-are-immutable-variables-better-than-mutable&#34;&gt;Why are immutable variables better than mutable&lt;/h2&gt;
+
+&lt;p&gt;The mutable state increases both &lt;em&gt;writeable&lt;/em&gt; and &lt;em&gt;readable visible pollution&lt;/em&gt;,
+immutable only the later. With immutable state any code can potentially
+experience different behavior depending on the state, but at least can&amp;rsquo;t change
+the behavior of other places that are polluted with the same state.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-is-encapsulation-and-abstraction-good&#34;&gt;Why is encapsulation and abstraction good&lt;/h2&gt;
+
+&lt;p&gt;Limiting visibility of the state using eg. Go &lt;code&gt;interfaces&lt;/code&gt; or Rust &lt;code&gt;traits&lt;/code&gt;, or
+just field and method visibility settings does not completely remove the state,
+but wraps it in a surface that limits it&amp;rsquo;s effective pollution: the code exposed to
+encapsulated or abstracted state can&amp;rsquo;t directly interfere with it.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-is-functional-code-preferable-over-imperative&#34;&gt;Why is functional code preferable over imperative&lt;/h2&gt;
+
+&lt;p&gt;By nature functional code limits the state pollution. Eg. pure virtual function
+can only use it&amp;rsquo;s arguments, so that arguments are the only state that pollutes
+the function code.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>My opinion on Go</title>
@@ -24,7 +161,7 @@
 decently sized ecosystem. Everybody know about it, and have somewhat positive
 attitude thinking &amp;ldquo;it&amp;rsquo;s simple, fast, and easy to learn&amp;rdquo;.&lt;/p&gt;
 
-&lt;p&gt;I enjoy (Crude but still) static typing, compiling to native
+&lt;p&gt;I enjoy (crude but still) static typing, compiling to native
 code, and most of all: native-green thread, making Go quite productive for
 server side code. I just had to get used to many workarounds for lack of
 generics, remember about avoid all the &lt;a href=&#34;https://gist.github.com/lavalamp/4bd23295a9f32706a48f&#34;&gt;Go landmines&lt;/a&gt; and ignore
